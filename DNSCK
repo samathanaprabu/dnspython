@@ -1,0 +1,19 @@
+import dns.resolver
+
+def query_dns(domain, record_types=['A', 'MX', 'NS']):
+    for record_type in record_types:
+        try:
+            answers = dns.resolver.resolve(domain, record_type)
+            print(f"Found {record_type} records for {domain}:")
+            for rdata in answers:
+                print(f"{domain} {record_type} {rdata}")
+        except dns.resolver.NoAnswer:
+            print(f"No {record_type} records found for {domain}")
+        except dns.resolver.NXDOMAIN:
+            print(f"{domain} does not exist")
+
+if __name__ == "__main__":
+    domain = input("Enter domain name: ")
+    record_types = input("Enter record types separated by commas (default is A,MX,NS): ") or 'A,MX,NS'
+    record_types = [rtype.strip().upper() for rtype in record_types.split(',')]
+    query_dns(domain, record_types)
